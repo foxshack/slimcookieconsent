@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cookie Consent Demo</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: #f5f5f5;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      background: white;
+      min-height: 100vh;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      font-size: 32px;
+    }
+
+    p {
+      margin-bottom: 16px;
+      color: #666;
+    }
+
+    .demo-section {
+      margin: 40px 0;
+      padding: 20px;
+      background: #f9f9f9;
+      border-left: 4px solid #333;
+    }
+
+    .demo-section h2 {
+      font-size: 20px;
+      margin-bottom: 16px;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    button {
+      padding: 10px 16px;
+      background: #333;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background: #555;
+    }
+
+    .output {
+      background: #f0f0f0;
+      padding: 12px;
+      border-radius: 4px;
+      margin-top: 12px;
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 12px;
+      white-space: pre-wrap;
+      word-break: break-all;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 3px;
+      font-weight: 500;
+      margin-top: 8px;
+    }
+
+    .status.accepted {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .status.rejected {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .status.unknown {
+      background: #d1ecf1;
+      color: #0c5460;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🍪 Cookie Consent Demo</h1>
+    <p>This is a demonstration of the CookieConsent library. Initialize it and interact with the cookie consent popup.</p>
+
+    <div class="demo-section">
+      <h2>Quick Start</h2>
+      <p>The script automatically initializes on page load and shows a consent popup if no preference is stored.</p>
+      <div class="btn-group">
+        <button onclick="showPopup()">Show Consent Popup</button>
+        <button onclick="resetConsent()">Reset Consent</button>
+      </div>
+    </div>
+
+    <div class="demo-section">
+      <h2>Current Consent State</h2>
+      <button onclick="displayConsent()">Get Current Consent</button>
+      <div id="consent-output" class="output" style="display: none;"></div>
+    </div>
+
+    <div class="demo-section">
+      <h2>Programmatic Control</h2>
+      <p>Set consent programmatically:</p>
+      <div class="btn-group">
+        <button onclick="acceptAll()">Accept All</button>
+        <button onclick="rejectOptional()">Reject Optional</button>
+      </div>
+      <div id="control-output" class="output" style="display: none;"></div>
+    </div>
+
+    <div class="demo-section">
+      <h2>Check Optional Cookies</h2>
+      <button onclick="checkOptional()">Has Optional Cookies?</button>
+      <div id="optional-output" class="output" style="display: none;"></div>
+    </div>
+
+    <div class="demo-section">
+      <h2>Event Listeners</h2>
+      <p>Listen to consent events:</p>
+      <button onclick="setupListeners()">Setup Event Listeners</button>
+      <div id="event-output" class="output" style="display: none;"></div>
+    </div>
+  </div>
+
+  <script src="./cookieconsent/index.js"></script>
+  <script>
+    // Initialize with custom options
+    CookieConsent.init({
+      essentialMessage: 'Essential cookies keep this site secure and functional. They cannot be disabled.',
+      optionalMessage: 'Optional cookies help us understand how you use our site, so we can make it better.',
+      onInit: function(state) {
+        console.log('CookieConsent initialized:', state);
+      },
+      onAccept: function(state) {
+        console.log('User accepted cookies:', state);
+        showNotification('Cookies accepted! Optional features are now enabled.', 'accepted');
+      },
+      onReject: function(state) {
+        console.log('User rejected optional cookies:', state);
+        showNotification('Optional cookies rejected.', 'rejected');
+      }
+    });
+
+    function showPopup() {
+      CookieConsent.showConsent();
+    }
+
+    function resetConsent() {
+      CookieConsent.reset();
+    }
+
+    function displayConsent() {
+      const consent = CookieConsent.getConsent();
+      const output = document.getElementById('consent-output');
+      output.textContent = JSON.stringify(consent, null, 2);
+      output.style.display = 'block';
+    }
+
+    function acceptAll() {
+      CookieConsent.setConsent({ optional: true });
+      const output = document.getElementById('control-output');
+      output.textContent = 'Consent set: Accept All\n\n' + JSON.stringify(CookieConsent.getConsent(), null, 2);
+      output.style.display = 'block';
+    }
+
+    function rejectOptional() {
+      CookieConsent.setConsent({ optional: false });
+      const output = document.getElementById('control-output');
+      output.textContent = 'Consent set: Reject Optional\n\n' + JSON.stringify(CookieConsent.getConsent(), null, 2);
+      output.style.display = 'block';
+    }
+
+    function checkOptional() {
+      const hasOptional = CookieConsent.hasOptionalCookies();
+      const output = document.getElementById('optional-output');
+      output.textContent = 'Has Optional Cookies: ' + hasOptional;
+      output.style.display = 'block';
+    }
+
+    function setupListeners() {
+      const output = document.getElementById('event-output');
+      output.textContent = 'Setting up event listeners...\n';
+      output.style.display = 'block';
+
+      CookieConsent.on('accept', function(state) {
+        output.textContent += '[EVENT] accept\n' + JSON.stringify(state, null, 2) + '\n\n';
+      });
+
+      CookieConsent.on('reject', function(state) {
+        output.textContent += '[EVENT] reject\n' + JSON.stringify(state, null, 2) + '\n\n';
+      });
+
+      CookieConsent.on('init', function(state) {
+        output.textContent += '[EVENT] init\n' + JSON.stringify(state, null, 2) + '\n\n';
+      });
+
+      output.textContent += 'Listeners ready! Try accepting or rejecting cookies.\n';
+    }
+
+    function showNotification(message, type) {
+      const status = document.createElement('div');
+      status.className = 'status ' + type;
+      status.textContent = message;
+      document.body.appendChild(status);
+      setTimeout(() => status.remove(), 4000);
+    }
+  </script>
+</body>
+</html>
