@@ -2,7 +2,7 @@
 
 A lightweight, GDPR-compliant cookie consent solution for websites. Minimal UI, no dependencies, and optional Google Tag Manager integration.
 
-N.B: This library requires modern browsers with support for ES6 and localStorage. It is intended to be a lightweight solution and is licensed under the MIT License. As such it comes with no warranty and should be used at your own risk. It is still in early development and may have breaking changes in future versions.
+> **N.B:** This library requires modern browsers with support for ES6 and localStorage. It is intended to be a lightweight solution and is licensed under the MIT License. As such it comes with **no warranty** and should be used at your own risk. It is still in early development and may have breaking changes in future versions.
 
 ## Features
 
