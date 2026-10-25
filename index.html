@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cookie Consent Demo</title>
+  <title>SlimCookieConsent Demo</title>
   <style>
     * {
       margin: 0;
@@ -109,7 +109,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>🍪 Cookie Consent Demo</h1>
+    <h1>🍪 SlimCookieConsent Demo</h1>
     <p>This is a demonstration of the CookieConsent library. Initialize it and interact with the cookie consent popup.</p>
 
     <div class="demo-section">
@@ -154,7 +154,7 @@
   <script src="./cookieconsent/index.js"></script>
   <script>
     // Initialize with custom options
-    CookieConsent.init({
+    SlimCookieConsent.init({
       essentialMessage: 'Essential cookies keep this site secure and functional. They cannot be disabled.',
       optionalMessage: 'Optional cookies help us understand how you use our site, so we can make it better.',
       onInit: function(state) {
@@ -171,36 +171,36 @@
     });
 
     function showPopup() {
-      CookieConsent.showConsent();
+      SlimCookieConsent.showConsent();
     }
 
     function resetConsent() {
-      CookieConsent.reset();
+      SlimCookieConsent.reset();
     }
 
     function displayConsent() {
-      const consent = CookieConsent.getConsent();
+      const consent = SlimCookieConsent.getConsent();
       const output = document.getElementById('consent-output');
       output.textContent = JSON.stringify(consent, null, 2);
       output.style.display = 'block';
     }
 
     function acceptAll() {
-      CookieConsent.setConsent({ optional: true });
+      SlimCookieConsent.setConsent({ optional: true });
       const output = document.getElementById('control-output');
-      output.textContent = 'Consent set: Accept All\n\n' + JSON.stringify(CookieConsent.getConsent(), null, 2);
+      output.textContent = 'Consent set: Accept All\n\n' + JSON.stringify(SlimCookieConsent.getConsent(), null, 2);
       output.style.display = 'block';
     }
 
     function rejectOptional() {
-      CookieConsent.setConsent({ optional: false });
+      SlimCookieConsent.setConsent({ optional: false });
       const output = document.getElementById('control-output');
-      output.textContent = 'Consent set: Reject Optional\n\n' + JSON.stringify(CookieConsent.getConsent(), null, 2);
+      output.textContent = 'Consent set: Reject Optional\n\n' + JSON.stringify(SlimCookieConsent.getConsent(), null, 2);
       output.style.display = 'block';
     }
 
     function checkOptional() {
-      const hasOptional = CookieConsent.hasOptionalCookies();
+      const hasOptional = SlimCookieConsent.hasOptionalCookies();
       const output = document.getElementById('optional-output');
       output.textContent = 'Has Optional Cookies: ' + hasOptional;
       output.style.display = 'block';
@@ -211,15 +211,15 @@
       output.textContent = 'Setting up event listeners...\n';
       output.style.display = 'block';
 
-      CookieConsent.on('accept', function(state) {
+      SlimCookieConsent.on('accept', function(state) {
         output.textContent += '[EVENT] accept\n' + JSON.stringify(state, null, 2) + '\n\n';
       });
 
-      CookieConsent.on('reject', function(state) {
+      SlimCookieConsent.on('reject', function(state) {
         output.textContent += '[EVENT] reject\n' + JSON.stringify(state, null, 2) + '\n\n';
       });
 
-      CookieConsent.on('init', function(state) {
+      SlimCookieConsent.on('init', function(state) {
         output.textContent += '[EVENT] init\n' + JSON.stringify(state, null, 2) + '\n\n';
       });
 

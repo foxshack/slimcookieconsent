@@ -1,4 +1,4 @@
-# Integration Guide
+# SlimCookieConsent Integration Guide
 
 Quick integration guide for consuming sites.
 
@@ -18,7 +18,7 @@ Initialize with default settings:
 
 ```html
 <script>
-  CookieConsent.init();
+  SlimSlimCookieConsent.init();
 </script>
 ```
 
@@ -33,7 +33,7 @@ That's it! The consent popup will automatically show on first visit.
 ```html
 <script src="path/to/cookieconsent/index.js"></script>
 <script>
-  CookieConsent.init({
+  SlimCookieConsent.init({
     onAccept: function(state) {
       if (state.optional) {
         loadAnalytics();
@@ -63,28 +63,28 @@ That's it! The consent popup will automatically show on first visit.
 ### Add "Cookie Settings" Button
 
 ```html
-<button onclick="CookieConsent.showConsent()">Cookie Settings</button>
+<button onclick="SlimCookieConsent.showConsent()">Cookie Settings</button>
 ```
 
 ### Listen to Events
 
 ```javascript
-CookieConsent.init();
+SlimCookieConsent.init();
 
 // Listen for user acceptance
-CookieConsent.on('accept', function(state) {
+SlimCookieConsent.on('accept', function(state) {
   console.log('User accepted cookies');
   loadThirdPartyScripts();
 });
 
 // Listen for rejection
-CookieConsent.on('reject', function(state) {
+SlimCookieConsent.on('reject', function(state) {
   console.log('User rejected optional cookies');
   disableTracking();
 });
 
 // Listen for initialization
-CookieConsent.on('init', function(state) {
+SlimCookieConsent.on('init', function(state) {
   console.log('Consent module initialized:', state);
 });
 ```
@@ -94,10 +94,10 @@ CookieConsent.on('init', function(state) {
 ## Check Consent Before Loading
 
 ```javascript
-CookieConsent.init();
+SlimCookieConsent.init();
 
 // Later, check if optional cookies are accepted
-if (CookieConsent.hasOptionalCookies()) {
+if (SlimCookieConsent.hasOptionalCookies()) {
   loadFacebookPixel();
 }
 ```
@@ -107,7 +107,7 @@ if (CookieConsent.hasOptionalCookies()) {
 ## Custom Messages
 
 ```javascript
-CookieConsent.init({
+SlimCookieConsent.init({
   essentialMessage: 'These cookies are necessary for our website to function.',
   optionalMessage: 'We use analytics to understand how you use our site.'
 });
@@ -119,18 +119,18 @@ CookieConsent.init({
 
 ```javascript
 // Accept all cookies programmatically
-CookieConsent.setConsent({ optional: true });
+SlimCookieConsent.setConsent({ optional: true });
 
 // Reject optional cookies programmatically
-CookieConsent.setConsent({ optional: false });
+SlimCookieConsent.setConsent({ optional: false });
 
 // Get current consent state
-const state = CookieConsent.getConsent();
+const state = SlimCookieConsent.getConsent();
 console.log(state);
 // { essential: true, optional: false, timestamp: 1635123456789, version: 1 }
 
 // Reset consent (show popup again, clear storage)
-CookieConsent.reset();
+SlimCookieConsent.reset();
 ```
 
 ---
@@ -140,7 +140,7 @@ CookieConsent.reset();
 ### Google Analytics (GA4)
 
 ```javascript
-CookieConsent.init({
+SlimCookieConsent.init({
   onAccept: function(state) {
     if (state.optional) {
       // Inject GA4
@@ -170,7 +170,7 @@ CookieConsent.init({
 ### Facebook Pixel
 
 ```javascript
-CookieConsent.init({
+SlimCookieConsent.init({
   onAccept: function(state) {
     if (state.optional) {
       // Inject Facebook Pixel
@@ -186,7 +186,7 @@ CookieConsent.init({
 ### Hotjar
 
 ```javascript
-CookieConsent.init({
+SlimCookieConsent.init({
   onAccept: function(state) {
     if (state.optional) {
       (function(h,o,t,j,a,r){
@@ -209,7 +209,7 @@ Open DevTools Console and run:
 
 ```javascript
 // Check current consent state
-CookieConsent.getConsent();
+SlimCookieConsent.getConsent();
 
 // Check localStorage
 localStorage.getItem('cookieconsent-preferences');
@@ -260,7 +260,7 @@ CookieConsent has built-in support for GTM Consent Mode. Enable it with a single
 <!-- CookieConsent with GTM integration -->
 <script src="path/to/cookieconsent/index.js"></script>
 <script>
-  CookieConsent.init({
+  SlimCookieConsent.init({
     gtmConsent: true  // Automatically manage GTM consent
   });
 </script>
@@ -296,7 +296,7 @@ gtag('consent', 'update', {
 ### GTM + Google Analytics (GA4)
 
 ```javascript
-CookieConsent.init({
+SlimCookieConsent.init({
   gtmConsent: true,
   onAccept: function(state) {
     // GTM consent already updated automatically
@@ -316,7 +316,7 @@ CookieConsent.init({
 Use `gtmConsent` for GTM, then load additional scripts in callbacks:
 
 ```javascript
-CookieConsent.init({
+SlimCookieConsent.init({
   gtmConsent: true,  // Manages GTM consent
   onAccept: function(state) {
     if (state.optional) {
@@ -340,7 +340,7 @@ function loadFacebookPixel() {
 If you don't want automatic GTM integration:
 
 ```javascript
-CookieConsent.init({
+SlimCookieConsent.init({
   gtmConsent: false  // Disable GTM integration
   // Manage GTM manually in callbacks
 });

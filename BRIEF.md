@@ -1,4 +1,4 @@
-# Cookie Consent Brief
+# SlimCookieConsent Brief
 
 ## Project Overview
 

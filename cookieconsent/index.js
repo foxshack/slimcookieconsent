@@ -1,6 +1,6 @@
 /**
- * CookieConsent - GDPR compliant cookie consent management
- * @version 1.0.0
+ * SlimCookieConsent - Lightweight GDPR-compliant cookie consent management
+ * @version 0.1.0
  */
 
 (function (global) {
@@ -500,7 +500,7 @@
   /**
    * Public API
    */
-  const CookieConsent = {
+  const SlimCookieConsent = {
     init: init,
     showConsent: showConsent,
     hideConsent: hideConsent,
@@ -520,9 +520,9 @@
 
   // Export for CommonJS
   if (typeof module !== 'undefined' && module.exports) {
-    module.exports = CookieConsent;
+    module.exports = SlimCookieConsent;
   }
 
   // Export for global
-  global.CookieConsent = CookieConsent;
+  global.SlimCookieConsent = SlimCookieConsent;
 })(typeof window !== 'undefined' ? window : global);

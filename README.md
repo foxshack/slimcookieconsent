@@ -1,6 +1,6 @@
-# Cookie Consent
+# SlimCookieConsent
 
-A lightweight, GDPR-compliant cookie consent solution for websites. Simple to integrate, no external dependencies, and minimal UI footprint.
+A lightweight, GDPR-compliant cookie consent solution for websites. Minimal UI, no dependencies, and optional Google Tag Manager integration.
 
 ## Features
 
@@ -39,7 +39,7 @@ npm install cookieconsent
   
   <script src="cookieconsent/index.js"></script>
   <script>
-    CookieConsent.init({
+    SlimCookieConsent.init({
       onAccept: function(state) {
         console.log('User accepted cookies:', state);
         // Load analytics, tracking scripts, etc.
@@ -55,7 +55,7 @@ npm install cookieconsent
 
 ## API Reference
 
-### `CookieConsent.init(options)`
+### `SlimCookieConsent.init(options)`
 
 Initialize the cookie consent library. If no consent preference is stored, the popup will be shown automatically.
 
@@ -70,7 +70,7 @@ Initialize the cookie consent library. If no consent preference is stored, the p
 
 **Example:**
 ```javascript
-CookieConsent.init({
+SlimCookieConsent.init({
   essentialMessage: 'We use essential cookies to keep the site secure.',
   optionalMessage: 'Optional cookies help us improve your experience.',
   gtmConsent: true,  // Enable GTM consent mode
@@ -85,29 +85,29 @@ CookieConsent.init({
 
 ---
 
-### `CookieConsent.showConsent()`
+### `SlimCookieConsent.showConsent()`
 
 Display the consent popup.
 
 **Example:**
 ```javascript
-CookieConsent.showConsent();
+SlimCookieConsent.showConsent();
 ```
 
 ---
 
-### `CookieConsent.hideConsent()`
+### `SlimCookieConsent.hideConsent()`
 
 Hide the consent popup without saving preferences.
 
 **Example:**
 ```javascript
-CookieConsent.hideConsent();
+SlimCookieConsent.hideConsent();
 ```
 
 ---
 
-### `CookieConsent.getConsent()`
+### `SlimCookieConsent.getConsent()`
 
 Get the current consent state.
 
@@ -119,14 +119,14 @@ Get the current consent state.
 
 **Example:**
 ```javascript
-const state = CookieConsent.getConsent();
+const state = SlimCookieConsent.getConsent();
 console.log(state);
 // Output: { essential: true, optional: true, timestamp: 1635123456789, version: 1 }
 ```
 
 ---
 
-### `CookieConsent.setConsent(state)`
+### `SlimCookieConsent.setConsent(state)`
 
 Set the consent state programmatically (useful for admin panels or programmatic control).
 
@@ -135,12 +135,12 @@ Set the consent state programmatically (useful for admin panels or programmatic 
 
 **Example:**
 ```javascript
-CookieConsent.setConsent({ optional: true });
+SlimCookieConsent.setConsent({ optional: true });
 ```
 
 ---
 
-### `CookieConsent.hasOptionalCookies()`
+### `SlimCookieConsent.hasOptionalCookies()`
 
 Check if the user has accepted optional cookies.
 
@@ -148,25 +148,25 @@ Check if the user has accepted optional cookies.
 
 **Example:**
 ```javascript
-if (CookieConsent.hasOptionalCookies()) {
+if (SlimCookieConsent.hasOptionalCookies()) {
   loadGoogleAnalytics();
 }
 ```
 
 ---
 
-### `CookieConsent.reset()`
+### `SlimCookieConsent.reset()`
 
 Clear the stored consent preference and show the consent popup again.
 
 **Example:**
 ```javascript
-CookieConsent.reset();
+SlimCookieConsent.reset();
 ```
 
 ---
 
-### `CookieConsent.on(eventName, callback)`
+### `SlimCookieConsent.on(eventName, callback)`
 
 Listen for consent events.
 
@@ -181,12 +181,12 @@ Listen for consent events.
 
 **Example:**
 ```javascript
-CookieConsent.on('accept', function(state) {
+SlimCookieConsent.on('accept', function(state) {
   console.log('Cookies accepted:', state);
   loadTrackingPixels();
 });
 
-CookieConsent.on('reject', function(state) {
+SlimCookieConsent.on('reject', function(state) {
   console.log('Cookies rejected:', state);
   disableTracking();
 });
@@ -228,7 +228,7 @@ If localStorage is unavailable, consent state only persists for the current sess
 ### Custom Messages
 
 ```javascript
-CookieConsent.init({
+SlimCookieConsent.init({
   essentialMessage: 'These cookies are required for the website to function properly.',
   optionalMessage: 'We use these cookies to improve your browsing experience and analyze site usage.'
 });
@@ -265,7 +265,7 @@ CookieConsent includes built-in support for **Google Tag Manager Consent Mode**.
 ### Enable GTM Consent
 
 ```javascript
-CookieConsent.init({
+SlimCookieConsent.init({
   gtmConsent: true  // Enable automatic GTM consent updates
 });
 ```
@@ -290,7 +290,7 @@ When `gtmConsent: true` is enabled, the following GTM consent types are managed:
 
 <script>
   // Initialize cookie consent with GTM integration
-  CookieConsent.init({
+  SlimCookieConsent.init({
     gtmConsent: true,
     onAccept: function(state) {
       console.log('User accepted cookies, GTM consent updated');
@@ -309,7 +309,7 @@ When `gtmConsent: true` is enabled, the following GTM consent types are managed:
 You can still load scripts manually alongside GTM consent:
 
 ```javascript
-CookieConsent.init({
+SlimCookieConsent.init({
   gtmConsent: true,
   onAccept: function(state) {
     if (state.optional) {
@@ -335,7 +335,7 @@ With `gtmConsent: true`:
 ### Example 1: Load Google Analytics only if user accepts
 
 ```javascript
-CookieConsent.init({
+SlimCookieConsent.init({
   onAccept: function(state) {
     if (state.optional) {
       // Load Google Analytics
@@ -356,15 +356,15 @@ CookieConsent.init({
 
 <script>
   function showSettings() {
-    CookieConsent.showConsent();
+    SlimCookieConsent.showConsent();
   }
 
   document.getElementById('accept-all').addEventListener('click', function() {
-    CookieConsent.setConsent({ optional: true });
+    SlimCookieConsent.setConsent({ optional: true });
   });
 
   document.getElementById('reject-all').addEventListener('click', function() {
-    CookieConsent.setConsent({ optional: false });
+    SlimCookieConsent.setConsent({ optional: false });
   });
 </script>
 ```
@@ -372,7 +372,7 @@ CookieConsent.init({
 ### Example 3: Check Consent Before Loading Third-Party Script
 
 ```javascript
-CookieConsent.init({
+SlimCookieConsent.init({
   onInit: function(state) {
     if (state.optional) {
       loadFacebookPixel();
