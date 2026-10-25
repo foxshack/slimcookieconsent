@@ -63,6 +63,7 @@ Initialize the cookie consent library. If no consent preference is stored, the p
 - `options` (object) — Configuration object with the following properties:
   - `essentialMessage` (string) — Description of essential cookies *(default: built-in message)*
   - `optionalMessage` (string) — Description of optional cookies *(default: built-in message)*
+  - `gtmConsent` (boolean) — Enable Google Tag Manager consent integration *(default: false)*
   - `onAccept` (function) — Callback fired when user accepts optional cookies
   - `onReject` (function) — Callback fired when user rejects optional cookies
   - `onInit` (function) — Callback fired when the library initializes
@@ -72,6 +73,7 @@ Initialize the cookie consent library. If no consent preference is stored, the p
 CookieConsent.init({
   essentialMessage: 'We use essential cookies to keep the site secure.',
   optionalMessage: 'Optional cookies help us improve your experience.',
+  gtmConsent: true,  // Enable GTM consent mode
   onAccept: function(state) {
     loadAnalytics();
   },
@@ -256,7 +258,79 @@ The library injects minimal CSS. To override styles, add CSS after the script:
 
 ---
 
-## Examples
+## Google Tag Manager Integration
+
+CookieConsent includes built-in support for **Google Tag Manager Consent Mode**. This automatically manages GTM consent based on user preferences without requiring manual gtag() calls.
+
+### Enable GTM Consent
+
+```javascript
+CookieConsent.init({
+  gtmConsent: true  // Enable automatic GTM consent updates
+});
+```
+
+### How It Works
+
+1. **Default Consent** — On page load, consent is set to `denied` for analytics and ads
+2. **User Interaction** — When user accepts/rejects, consent is automatically updated in GTM
+3. **Persistent** — Stored preferences are applied to GTM on subsequent page loads
+
+### What Gets Updated
+
+When `gtmConsent: true` is enabled, the following GTM consent types are managed:
+- `analytics_storage` — Set to `granted` if user accepts optional cookies, `denied` if rejected
+- `ad_storage` — Set to `granted` if user accepts optional cookies, `denied` if rejected
+
+### Example: GTM + Google Analytics
+
+```html
+<!-- Google Tag Manager -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+
+<script>
+  // Initialize cookie consent with GTM integration
+  CookieConsent.init({
+    gtmConsent: true,
+    onAccept: function(state) {
+      console.log('User accepted cookies, GTM consent updated');
+    }
+  });
+
+  // GTM Consent Mode is automatically configured:
+  // - Default consent: denied
+  // - Updated when user makes a choice
+  // - No additional gtag() calls needed
+</script>
+```
+
+### Advanced: Conditional Script Loading
+
+You can still load scripts manually alongside GTM consent:
+
+```javascript
+CookieConsent.init({
+  gtmConsent: true,
+  onAccept: function(state) {
+    if (state.optional) {
+      // GTM consent already updated automatically
+      // Load additional third-party scripts if needed
+      loadFacebookPixel();
+      loadHotjar();
+    }
+  }
+});
+```
+
+### Default Behavior
+
+With `gtmConsent: true`:
+- **On First Visit** — GTM consent defaults to `denied`, popup shows
+- **After Accept** — GTM consent updated to `granted`
+- **After Reject** — GTM consent set to `denied`
+- **On Return Visit** — Stored preference automatically applied to GTM
+
+---
 
 ### Example 1: Load Google Analytics only if user accepts
 

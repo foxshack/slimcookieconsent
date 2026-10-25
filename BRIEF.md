@@ -27,6 +27,7 @@ A lightweight, GDPR-compliant cookie consent solution designed for easy integrat
 - ✅ Public API to trigger popup for preference changes
 - ✅ Callback mechanism for host sites to hook into accept events
 - ✅ Detection of existing consent state to avoid re-showing banner
+- ✅ Optional Google Tag Manager Consent Mode integration (lightweight, no extra dependencies)
 
 ### Excluded Features
 
@@ -71,9 +72,18 @@ CookieConsent.init(options)
 **Options Object:**
 - `essentialMessage` (string) — Description of essential cookies
 - `optionalMessage` (string) — Description of optional cookies
+- `gtmConsent` (boolean) — Enable Google Tag Manager consent integration *(default: false)*
 - `onAccept` (function) — Callback fired when user accepts optional cookies
 - `onReject` (function) — Callback fired when user rejects optional cookies
 - `onInit` (function) — Callback fired when consent module initializes
+
+#### GTM Integration (Optional)
+
+When `gtmConsent: true`, the library automatically manages Google Tag Manager Consent Mode:
+- Sets default consent to `denied` before GTM loads
+- Updates `analytics_storage` and `ad_storage` based on user choice
+- No manual gtag() calls required
+- Persists consent across sessions
 
 #### Methods
 

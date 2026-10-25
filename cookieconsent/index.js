@@ -14,12 +14,59 @@
     onAccept: null,
     onReject: null,
     onInit: null,
+    gtmConsent: false,
   };
 
   let config = { ...DEFAULT_OPTIONS };
   let consentState = null;
   let popupElement = null;
   let listeners = {};
+
+  /**
+   * Update Google Tag Manager consent based on user preferences
+   */
+  function updateGTMConsent(state) {
+    if (!config.gtmConsent) {
+      return; // GTM consent not enabled
+    }
+
+    if (typeof gtag === 'undefined') {
+      console.warn('CookieConsent: gtag function not found. Make sure Google Tag Manager is loaded.');
+      return;
+    }
+
+    const consentState = {
+      'analytics_storage': state.optional ? 'granted' : 'denied',
+      'ad_storage': state.optional ? 'granted' : 'denied',
+    };
+
+    try {
+      gtag('consent', 'update', consentState);
+    } catch (e) {
+      console.error('CookieConsent: Error updating GTM consent', e);
+    }
+  }
+
+  /**
+   * Set default GTM consent before GTM loads
+   */
+  function setDefaultGTMConsent() {
+    if (!config.gtmConsent) {
+      return; // GTM consent not enabled
+    }
+
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('consent', 'default', {
+      'analytics_storage': 'denied',
+      'ad_storage': 'denied',
+      'wait_for_update': 500,
+    });
+  }
 
   /**
    * Check if localStorage is available
@@ -143,6 +190,7 @@
     acceptBtn.addEventListener('click', function () {
       saveConsent({ optional: true });
       hideConsent();
+      updateGTMConsent(consentState);
       emit('accept', consentState);
       if (config.onAccept && typeof config.onAccept === 'function') {
         config.onAccept(consentState);
@@ -152,6 +200,7 @@
     rejectBtn.addEventListener('click', function () {
       saveConsent({ optional: false });
       hideConsent();
+      updateGTMConsent(consentState);
       emit('reject', consentState);
       if (config.onReject && typeof config.onReject === 'function') {
         config.onReject(consentState);
@@ -206,6 +255,7 @@
     saveConsent({
       optional: state.optional === true,
     });
+    updateGTMConsent(consentState);
   }
 
   /**
@@ -258,16 +308,21 @@
   function init(options) {
     if (options && typeof options === 'object') {
       Object.keys(options).forEach(function (key) {
-        if (key in DEFAULT_OPTIONS || key === 'onAccept' || key === 'onReject' || key === 'onInit') {
+        if (key in DEFAULT_OPTIONS || key === 'onAccept' || key === 'onReject' || key === 'onInit' || key === 'gtmConsent') {
           config[key] = options[key];
         }
       });
     }
 
+    // Set default GTM consent before GTM loads
+    setDefaultGTMConsent();
+
     // Load stored consent
     const stored = getStoredConsent();
     if (stored) {
       consentState = stored;
+      // Update GTM with stored consent
+      updateGTMConsent(consentState);
     } else {
       // No stored consent, show popup with optional pre-ticked
       consentState = {

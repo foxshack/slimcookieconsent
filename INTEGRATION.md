@@ -247,7 +247,106 @@ localStorage.getItem('cookieconsent-preferences');
 
 ---
 
-## Support
+## Google Tag Manager (GTM) Consent Mode
+
+CookieConsent has built-in support for GTM Consent Mode. Enable it with a single option.
+
+### Basic GTM Setup
+
+```html
+<!-- Google Tag Manager script -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+
+<!-- CookieConsent with GTM integration -->
+<script src="path/to/cookieconsent/index.js"></script>
+<script>
+  CookieConsent.init({
+    gtmConsent: true  // Automatically manage GTM consent
+  });
+</script>
+```
+
+That's it! Consent is now:
+- ✅ Denied by default on first visit
+- ✅ Updated when user accepts/rejects
+- ✅ Persisted across sessions
+
+### How It Works
+
+1. **Page Load** — Default consent is set to `denied`
+2. **User Decides** — Consent is updated to `granted` (accept) or `denied` (reject)
+3. **GTM Receives Update** — Analytics and ads respect the user choice
+
+### What Gets Managed
+
+```javascript
+// When user accepts optional cookies:
+gtag('consent', 'update', {
+  'analytics_storage': 'granted',
+  'ad_storage': 'granted'
+});
+
+// When user rejects optional cookies:
+gtag('consent', 'update', {
+  'analytics_storage': 'denied',
+  'ad_storage': 'denied'
+});
+```
+
+### GTM + Google Analytics (GA4)
+
+```javascript
+CookieConsent.init({
+  gtmConsent: true,
+  onAccept: function(state) {
+    // GTM consent already updated automatically
+    // Google Analytics will now track based on consent
+    console.log('GA4 will now collect data');
+  },
+  onReject: function(state) {
+    // GTM consent set to denied
+    // Google Analytics will not track
+    console.log('GA4 will not collect data');
+  }
+});
+```
+
+### GTM + Additional Pixels
+
+Use `gtmConsent` for GTM, then load additional scripts in callbacks:
+
+```javascript
+CookieConsent.init({
+  gtmConsent: true,  // Manages GTM consent
+  onAccept: function(state) {
+    if (state.optional) {
+      // Load Facebook Pixel
+      loadFacebookPixel();
+      // Load custom analytics
+      loadCustomAnalytics();
+    }
+  }
+});
+
+function loadFacebookPixel() {
+  !function(f,b,e,v,n,t,s){if(f.fbq)return;
+    // ... Facebook Pixel code
+  }(window, document, 'img', 'https://connect.facebook.net/en_US/fbevents.js', 'fbq');
+}
+```
+
+### Disable GTM Consent (Optional)
+
+If you don't want automatic GTM integration:
+
+```javascript
+CookieConsent.init({
+  gtmConsent: false  // Disable GTM integration
+  // Manage GTM manually in callbacks
+});
+```
+
+---
 
 For issues or questions, refer to:
 - [README.md](./README.md) — Full API reference
