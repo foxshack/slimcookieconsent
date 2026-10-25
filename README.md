@@ -15,10 +15,10 @@ A lightweight, GDPR-compliant cookie consent solution for websites. Minimal UI, 
 
 ## Installation
 
-### Via NPM
+<!-- ### Via NPM
 ```bash
 npm install cookieconsent
-```
+``` -->
 
 ### Direct Script Tag
 ```html
